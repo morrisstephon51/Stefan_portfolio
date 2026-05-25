@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Stefan Morris — AI Educator, Training Developer, Tech Consultant. Founder of The Plug AI." />
+  <title>Stefan Morris | AI Educator | The Plug AI</title>
+
+  <!-- Google Fonts: Space Grotesk + Syne -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <style>
+    /* =============================================
+       DESIGN TOKENS
+    ============================================= */
+    :root {
+      --bg-primary:    #0D0D0D;
+      --bg-secondary:  #111111;
+      --bg-card:       #161616;
+      --green:         #00FF88;
+      --purple:        #7B2FBE;
+      --text:          #F5F5F5;
+      --muted:         #777777;
+      --border:        rgba(255,255,255,0.06);
+      --glow-g:        0 0 24px rgba(0,255,136,.45), 0 0 48px rgba(0,255,136,.18);
+      --glow-p:        0 0 24px rgba(123,47,190,.45), 0 0 48px rgba(123,47,190,.18);
+      --font-body:     'Space Grotesk', sans-serif;
+      --font-display:  'Syne', sans-serif;
+    }
+
+    /* =============================================
+       BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    /* =============================================
+       UTILITIES
+    ============================================= */
+    .section-label {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: .5rem;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      margin-bottom: 1rem;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      animation: orbPulse 7s ease-in-out infinite;
+    }
+
+    @keyframes orbPulse {
+      0%,100% { opacity: .12; transform: scale(1); }
+      50%      { opacity: .22; transform: scale(1.1); }
+    }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      opacity: .2;
+    }
+
+    /* =============================================
+       FADE-IN ON SCROLL
+    ============================================= */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: none; }
+    .fade-up.d1 { transition-delay: .1s; }
+    .fade-up.d2 { transition-delay: .22s; }
+    .fade-up.d3 { transition-delay: .34s; }
+    .fade-up.d4 { transition-delay: .46s; }
+
+    /* =============================================
+       SCROLLBAR
+    ============================================= */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: rgba(0,255,136,.28); border-radius: 3px; }
+
+    /* =============================================
+       NAVBAR
+    ============================================= */
+    #mainNav {
+      background: rgba(13,13,13,.93);
+      backdrop-filter: blur(22px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+      transition: padding .3s ease, box-shadow .3s ease;
+    }
+    #mainNav.scrolled {
+      padding: .55rem 0;
+      box-shadow: 0 4px 40px rgba(0,255,136,.05);
+    }
+
+    .navbar-brand {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--text) !important;
+      letter-spacing: -.02em;
+    }
+    .plug-dot { color: var(--green); }
+
+    .nav-link {
+      color: var(--muted) !important;
+      font-weight: 500;
+      font-size: .88rem;
+      letter-spacing: .03em;
+      padding: .4rem .85rem !important;
+      position: relative;
+      transition: color .2s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%) scaleX(0);
+      width: 70%; height: 2px;
+      background: var(--green);
+      border-radius: 2px;
+      transition: transform .3s ease;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--text) !important; }
+    .nav-link:hover::after, .nav-link.active::after { transform: translateX(-50%) scaleX(1); }
+
+    .navbar-toggler { border-color: var(--border); }
+    .navbar-toggler-icon { filter: invert(1); }
+
+    /* =============================================
+       BUTTONS
+    ============================================= */
+    .btn-plug {
+      display: inline-block;
+      background: var(--green);
+      color: #0D0D0D;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: .88rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .78rem 2rem;
+      border-radius: 50px;
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all .3s ease;
+      box-shadow: var(--glow-g);
+    }
+    .btn-plug:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 36px rgba(0,255,136,.65), 0 0 70px rgba(0,255,136,.28);
+      color: #0D0D0D;
+    }
+
+    .btn-outline-plug {
+      display: inline-block;
+      background: transparent;
+      color: var(--green);
+      border: 1.5px solid var(--green);
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: .88rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .75rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all .3s ease;
+    }
+    .btn-outline-plug:hover {
+      background: rgba(0,255,136,.1);
+      box-shadow: var(--glow-g);
+      color: var(--green);
+      transform: translateY(-3px);
+    }
+
+    /* =============================================
+       SECTIONS
+    ============================================= */
+    section { padding: 100px 0; }
+
+    /* =============================================
+       ██  HERO  ██
+    ============================================= */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    /* Moving grid background */
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,136,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,.025) 1px, transparent 1px);
+      background-size: 55px 55px;
+      animation: gridScroll 25s linear infinite;
+    }
+    @keyframes gridScroll {
+      from { transform: translateY(0); }
+      to   { transform: translateY(55px); }
+    }
+
+    /* Radial purple glow center */
+    #hero::after {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 80vw; height: 80vh;
+      background: radial-gradient(ellipse, rgba(123,47,190,.07) 0%, transparent 68%);
+      pointer-events: none;
+    }
+
+    .hero-inner { position: relative; z-index: 2; }
+
+    .hero-eyebrow {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1.6rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 36px; height: 2px;
+      background: var(--green);
+      border-radius: 2px;
+    }
+
+    .hero-name {
+      font-size: clamp(3rem, 10vw, 6rem);
+      font-weight: 800;
+      line-height: .96;
+      letter-spacing: -.04em;
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(.9rem, 2.2vw, 1.15rem);
+      color: var(--muted);
+      font-weight: 400;
+      margin-bottom: 1.8rem;
+    }
+    .hero-subtitle strong { color: var(--text); font-weight: 600; }
+
+    .hero-tagline {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2.8vw, 1.5rem);
+      font-weight: 600;
+      margin-bottom: 2.5rem;
+      line-height: 1.4;
+    }
+
+    /* Typewriter cursor */
+    .tw-cursor {
+      border-right: 3px solid var(--green);
+      padding-right: 3px;
+      animation: cursorBlink 1s step-end infinite;
+    }
+    @keyframes cursorBlink {
+      0%,100% { border-color: var(--green); }
+      50%      { border-color: transparent; }
+    }
+
+    /* ── Hero image ── */
+    .hero-img-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-img-frame {
+      position: relative;
+      width: 340px;
+      height: 430px;
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    /* Animated gradient border */
+    .hero-img-frame::before {
+      content: '';
+      position: absolute; inset: -3px;
+      border-radius: 27px;
+      background: linear-gradient(135deg, var(--green), var(--purple), var(--green));
+      background-size: 300% 300%;
+      animation: borderSpin 5s linear infinite;
+      z-index: -1;
+    }
+    @keyframes borderSpin {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Bottom fade on photo */
+    .hero-img-frame::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 38%;
+      background: linear-gradient(to top, rgba(13,13,13,.75), transparent);
+      pointer-events: none;
+    }
+
+    .hero-img-frame img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      filter: contrast(1.05) brightness(.97) saturate(1.08);
+      display: block;
+      transition: transform .6s ease;
+    }
+    .hero-img-frame:hover img { transform: scale(1.04); }
+
+    /* Floating badges */
+    .h-badge {
+      position: absolute;
+      background: rgba(13,13,13,.9);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: .5rem .9rem;
+      font-size: .78rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      backdrop-filter: blur(12px);
+      white-space: nowrap;
+      animation: floatY 3.5s ease-in-out infinite;
+    }
+    .h-badge .bico {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .95rem;
+    }
+    .h-badge-1 { top: 18px; right: -44px; animation-delay: 0s; }
+    .h-badge-2 { bottom: 68px; left: -54px; animation-delay: 1.6s; }
+    .h-badge-3 {
+      top: 50%; right: -60px;
+      transform: translateY(-50%);
+      animation: floatYMid 3.5s ease-in-out infinite;
+      animation-delay: .9s;
+    }
+    @keyframes floatY {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-9px); }
+    }
+    @keyframes floatYMid {
+      0%,100% { transform: translateY(-50%); }
+      50%      { transform: translateY(calc(-50% - 9px)); }
+    }
+
+    /* Dot grid decoration */
+    .dot-grid {
+      position: absolute; bottom: -18px; right: -18px;
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 6px;
+    }
+    .dot-grid span {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      opacity: .22;
+      animation: dotFade 2.2s ease-in-out infinite;
+    }
+    .dot-grid span:nth-child(odd)  { animation-delay: .35s; }
+    .dot-grid span:nth-child(3n)   { animation-delay: .7s; }
+    @keyframes dotFade {
+      0%,100% { opacity: .1; transform: scale(.7); }
+      50%      { opacity: .55; transform: scale(1); }
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 28px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .3rem;
+      color: var(--muted);
+      font-size: .7rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      animation: fadeIn 1s ease 2s both;
+    }
+    .scroll-mouse {
+      width: 22px; height: 34px;
+      border: 2px solid rgba(255,255,255,.18);
+      border-radius: 11px;
+      display: flex; justify-content: center;
+      padding-top: 5px;
+    }
+    .scroll-wheel {
+      width: 3px; height: 7px;
+      background: var(--green);
+      border-radius: 2px;
+      animation: wheelDrop 2s ease-in-out infinite;
+    }
+    @keyframes wheelDrop {
+      0%   { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(10px); opacity: 0; }
+    }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+    /* =============================================
+       ██  ABOUT  ██
+    ============================================= */
+    #about { background: var(--bg-secondary); }
+
+    /* AI chat panel */
+    .chat-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .chat-panel::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--purple));
+    }
+
+    .chat-bar {
+      display: flex; align-items: center; gap: .45rem;
+      margin-bottom: 1.2rem;
+      padding-bottom: .85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .c-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    .chat-msg {
+      display: flex; gap: .75rem;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: msgIn .45s ease forwards;
+    }
+    .chat-msg.right { flex-direction: row-reverse; }
+
+    .chat-msg:nth-child(1) { animation-delay: .4s; }
+    .chat-msg:nth-child(2) { animation-delay: 1.1s; }
+    .chat-msg:nth-child(3) { animation-delay: 2s; }
+    .chat-msg:nth-child(4) { animation-delay: 2.9s; }
+
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .c-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem; font-weight: 700; flex-shrink: 0;
+    }
+
+    .c-bubble {
+      background: rgba(255,255,255,.05);
+      border-radius: 12px;
+      padding: .65rem .95rem;
+      font-size: .84rem;
+      max-width: 76%;
+      line-height: 1.55;
+    }
+    .chat-msg.right .c-bubble {
+      background: rgba(0,255,136,.1);
+      border: 1px solid rgba(0,255,136,.18);
+    }
+
+    .typing {
+      display: flex; align-items: center; gap: 4px;
+      padding: .5rem .9rem;
+      background: rgba(255,255,255,.05);
+      border-radius: 12px;
+      width: fit-content;
+    }
+    .t-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      animation: typeBounce 1.3s ease-in-out infinite;
+    }
+    .t-dot:nth-child(2) { animation-delay: .22s; }
+    .t-dot:nth-child(3) { animation-delay: .44s; }
+    @keyframes typeBounce {
+      0%,60%,100% { transform: translateY(0); }
+      30%           { transform: translateY(-7px); }
+    }
+
+    /* Stats */
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.4rem 1rem;
+      text-align: center;
+      transition: all .3s ease;
+    }
+    .stat-card:hover {
+      border-color: rgba(0,255,136,.28);
+      box-shadow: var(--glow-g);
+      transform: translateY(-4px);
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+      margin-bottom: .2rem;
+    }
+    .stat-lbl {
+      font-size: .72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+
+    /* Live indicator dot */
+    .live-dot {
+      display: inline-block;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: livePulse 1.8s ease-in-out infinite;
+    }
+    @keyframes livePulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: .4; transform: scale(.7); }
+    }
+
+    /* =============================================
+       ██  SKILLS  ██
+    ============================================= */
+    #skills { background: var(--bg-primary); }
+
+    .skill-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      transition: transform .4s ease, border-color .4s ease, box-shadow .4s ease;
+    }
+    .skill-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--sk-accent, var(--green));
+      border-radius: 20px 20px 0 0;
+    }
+    .skill-card:hover { transform: translateY(-6px); }
+    .skill-card.green:hover { box-shadow: var(--glow-g); border-color: rgba(0,255,136,.2); }
+    .skill-card.purple { --sk-accent: var(--purple); }
+    .skill-card.purple:hover { box-shadow: var(--glow-p); border-color: rgba(123,47,190,.2); }
+    .skill-card.cyan   { --sk-accent: #00CFFF; }
+    .skill-card.cyan:hover { box-shadow: 0 0 24px rgba(0,207,255,.35); border-color: rgba(0,207,255,.2); }
+
+    .sk-icon {
+      width: 48px; height: 48px; border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 1.1rem;
+    }
+    .sk-title { font-size: 1rem; font-weight: 700; margin-bottom: 1.1rem; }
+
+    .badge-pill {
+      display: inline-flex; align-items: center; gap: .35rem;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: .32rem .85rem;
+      font-size: .78rem; font-weight: 500;
+      margin: .22rem;
+      transition: all .3s ease; cursor: default;
+    }
+    .badge-pill:hover {
+      background: rgba(0,255,136,.1);
+      border-color: rgba(0,255,136,.35);
+      color: var(--green);
+      box-shadow: 0 0 10px rgba(0,255,136,.12);
+    }
+    .badge-pill.p:hover {
+      background: rgba(123,47,190,.12);
+      border-color: rgba(123,47,190,.4);
+      color: #C09FEE;
+    }
+
+    /* Terminal panel */
+    .terminal {
+      background: #090909;
+      border: 1px solid rgba(0,255,136,.13);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .term-bar {
+      background: #141414;
+      padding: .7rem 1rem;
+      display: flex; align-items: center; gap: .45rem;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .term-dot { width: 11px; height: 11px; border-radius: 50%; }
+    .term-body {
+      padding: 1.1rem 1.2rem;
+      font-family: 'Courier New', monospace;
+      font-size: .8rem; line-height: 1.75; color: #999;
+    }
+    .t-line {
+      display: flex; gap: .5rem;
+      opacity: 0; animation: tReveal .35s ease forwards;
+    }
+    .t-line:nth-child(1) { animation-delay: .25s; }
+    .t-line:nth-child(2) { animation-delay: .7s; }
+    .t-line:nth-child(3) { animation-delay: 1.15s; }
+    .t-line:nth-child(4) { animation-delay: 1.6s; }
+    .t-line:nth-child(5) { animation-delay: 2.05s; }
+    .t-line:nth-child(6) { animation-delay: 2.5s; }
+    .t-line:nth-child(7) { animation-delay: 2.95s; }
+    .t-line:nth-child(8) { animation-delay: 3.4s; }
+    @keyframes tReveal {
+      from { opacity:0; transform: translateX(-8px); }
+      to   { opacity:1; transform: none; }
+    }
+    .tp { color: var(--green); }
+    .tc { color: var(--text); }
+    .to { color: #666; }
+    .ts { color: var(--green); }
+    .th { color: #C09FEE; }
+
+    /* Cert badges */
+    .cert-row {
+      display: flex; align-items: center; gap: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: .95rem 1.1rem;
+      margin-bottom: .7rem;
+      transition: all .3s ease;
+    }
+    .cert-row:hover { border-color: rgba(0,255,136,.28); transform: translateX(5px); }
+    .cert-ico {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .cert-name { font-weight: 600; font-size: .88rem; }
+    .cert-issuer { font-size: .72rem; color: var(--muted); }
+    .cert-badge-pill {
+      margin-left: auto; flex-shrink: 0;
+      font-size: .68rem; color: var(--green);
+      border: 1px solid rgba(0,255,136,.22);
+      padding: .18rem .65rem; border-radius: 50px;
+    }
+
+    /* =============================================
+       ██  EXPERIENCE  ██
+    ============================================= */
+    #experience { background: var(--bg-secondary); }
+
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(to bottom, var(--green), var(--purple), transparent);
+    }
+
+    .tl-item {
+      position: relative; margin-bottom: 2.8rem;
+      opacity: 0; transform: translateX(-18px);
+      animation: tlSlide .55s ease forwards;
+    }
+    .tl-item:nth-child(1) { animation-delay: .15s; }
+    .tl-item:nth-child(2) { animation-delay: .35s; }
+    .tl-item:nth-child(3) { animation-delay: .55s; }
+    .tl-item:nth-child(4) { animation-delay: .75s; }
+    @keyframes tlSlide { to { opacity:1; transform: none; } }
+
+    .tl-dot {
+      position: absolute; left: -2.42rem; top: .28rem;
+      width: 15px; height: 15px; border-radius: 50%;
+      background: var(--green); border: 3px solid var(--bg-secondary);
+      box-shadow: 0 0 10px rgba(0,255,136,.5);
+    }
+    .tl-item:nth-child(2) .tl-dot { background: var(--purple); box-shadow: 0 0 10px rgba(123,47,190,.5); }
+    .tl-item:nth-child(3) .tl-dot { background: #00CFFF;  box-shadow: 0 0 10px rgba(0,207,255,.5); }
+    .tl-item:nth-child(4) .tl-dot { background: #FF7B7B;  box-shadow: 0 0 10px rgba(255,123,123,.5); }
+
+    .tl-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.4rem;
+      transition: all .3s ease;
+    }
+    .tl-card:hover { border-color: rgba(0,255,136,.18); transform: translateX(5px); }
+
+    .tl-period { font-size: .72rem; font-weight: 700; color: var(--green); letter-spacing: .1em; text-transform: uppercase; margin-bottom: .4rem; }
+    .tl-role { font-size: 1.05rem; font-weight: 700; margin-bottom: .18rem; font-family: var(--font-display); }
+    .tl-company { font-size: .88rem; color: var(--muted); margin-bottom: .75rem; }
+    .tl-desc { font-size: .86rem; color: rgba(245,245,245,.68); line-height: 1.65; }
+
+    .tl-tags { margin-top: .7rem; display: flex; flex-wrap: wrap; gap: .35rem; }
+    .tl-tag {
+      font-size: .7rem; font-weight: 600;
+      padding: .18rem .65rem; border-radius: 50px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border); color: var(--muted);
+    }
+
+    /* Pulse ring */
+    .pulse-rings {
+      position: relative;
+      width: 100px; height: 100px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .p-ring {
+      position: absolute; border-radius: 50%;
+      border: 2px solid var(--green);
+      animation: ringOut 2.8s ease-out infinite; opacity: 0;
+    }
+    .p-ring:nth-child(2) { animation-delay: .9s; border-color: var(--purple); }
+    .p-ring:nth-child(3) { animation-delay: 1.8s; border-color: #00CFFF; }
+    @keyframes ringOut {
+      0%   { width: 18px; height: 18px; opacity: .8; }
+      100% { width: 100px; height: 100px; opacity: 0; }
+    }
+    .p-center {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(0,255,136,.12);
+      border: 1px solid rgba(0,255,136,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 0 18px rgba(0,255,136,.2);
+    }
+
+    /* =============================================
+       ██  PROJECTS  ██
+    ============================================= */
+    #projects { background: var(--bg-primary); }
+
+    .proj-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden; height: 100%;
+      display: flex; flex-direction: column;
+      transition: transform .4s ease, border-color .4s ease, box-shadow .4s ease;
+    }
+    .proj-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(0,255,136,.28);
+      box-shadow: var(--glow-g);
+    }
+
+    /* Animated preview areas */
+    .proj-vis {
+      height: 190px; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-primary);
+    }
+
+    /* ─ Neural net SVG animation ─ */
+    .nn-svg line { animation: dashFlow 2.5s linear infinite; }
+    @keyframes dashFlow { to { stroke-dashoffset: -24; } }
+    .nn-svg circle { animation: nodePulse 2s ease-in-out infinite; }
+    @keyframes nodePulse {
+      0%,100% { opacity: .4; }
+      50%      { opacity: 1; }
+    }
+
+    /* ─ Bar chart animation ─ */
+    .chart-wrap {
+      display: flex; align-items: flex-end; gap: 9px;
+      height: 110px; padding: 0 24px; width: 100%;
+    }
+    .c-bar {
+      flex: 1; border-radius: 5px 5px 0 0;
+      transform: scaleY(0); transform-origin: bottom;
+      animation: barUp 1.2s ease-out forwards;
+    }
+    .c-bar:nth-child(1) { height: 55%; background: var(--green);   animation-delay: .1s; }
+    .c-bar:nth-child(2) { height: 82%; background: var(--purple);  animation-delay: .2s; }
+    .c-bar:nth-child(3) { height: 42%; background: var(--green);   animation-delay: .3s; }
+    .c-bar:nth-child(4) { height: 68%; background: #00CFFF;        animation-delay: .4s; }
+    .c-bar:nth-child(5) { height: 90%; background: var(--purple);  animation-delay: .5s; }
+    .c-bar:nth-child(6) { height: 52%; background: var(--green);   animation-delay: .6s; }
+    @keyframes barUp { to { transform: scaleY(1); } }
+
+    /* ─ Code typing animation ─ */
+    .code-wrap {
+      font-family: 'Courier New', monospace;
+      font-size: .76rem; line-height: 1.7; color: #888;
+      padding: 1rem 1.4rem; width: 100%;
+    }
+    .c-line { opacity: 0; animation: codeAppear .3s ease forwards; white-space: nowrap; overflow: hidden; }
+    .c-line:nth-child(1) { animation-delay: .25s; }
+    .c-line:nth-child(2) { animation-delay: .65s; }
+    .c-line:nth-child(3) { animation-delay: 1.05s; }
+    .c-line:nth-child(4) { animation-delay: 1.45s; }
+    .c-line:nth-child(5) { animation-delay: 1.85s; }
+    .c-line:nth-child(6) { animation-delay: 2.25s; }
+    @keyframes codeAppear { from { opacity:0; } to { opacity:1; } }
+    .ck { color: #C09FEE; }
+    .cs { color: var(--green); }
+    .cf { color: #00CFFF; }
+    .cm { color: #444; }
+
+    /* ─ Community / orbit animation ─ */
+    @keyframes orbit1 {
+      from { transform: rotate(0deg) translateX(42px); }
+      to   { transform: rotate(360deg) translateX(42px); }
+    }
+    @keyframes orbit2 {
+      from { transform: rotate(130deg) translateX(54px); }
+      to   { transform: rotate(490deg) translateX(54px); }
+    }
+
+    /* Project info */
+    .proj-info { padding: 1.4rem; flex: 1; display: flex; flex-direction: column; }
+    .proj-cat {
+      font-size: .7rem; font-weight: 700;
+      letter-spacing: .15em; text-transform: uppercase;
+      color: var(--green); margin-bottom: .45rem;
+    }
+    .proj-title { font-size: 1.05rem; font-weight: 700; font-family: var(--font-display); margin-bottom: .7rem; }
+    .proj-desc { font-size: .84rem; color: rgba(245,245,245,.62); line-height: 1.65; flex: 1; margin-bottom: 1.1rem; }
+
+    .proj-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+    .tech-tags { display: flex; gap: .35rem; flex-wrap: wrap; }
+    .tech-tag {
+      font-size: .68rem; font-weight: 600;
+      padding: .14rem .55rem; border-radius: 4px;
+      background: rgba(0,255,136,.07);
+      border: 1px solid rgba(0,255,136,.14);
+      color: var(--green);
+    }
+    .proj-link {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); text-decoration: none; flex-shrink: 0;
+      transition: all .3s ease;
+    }
+    .proj-link:hover { border-color: var(--green); color: var(--green); box-shadow: 0 0 10px rgba(0,255,136,.18); }
+
+    /* =============================================
+       ██  CONTACT  ██
+    ============================================= */
+    #contact { background: var(--bg-secondary); }
+
+    .contact-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.2rem;
+    }
+
+    .contact-link {
+      display: flex; align-items: center; gap: .95rem;
+      padding: .9rem 1.1rem;
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      margin-bottom: .65rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: all .3s ease;
+    }
+    .contact-link:hover {
+      background: rgba(0,255,136,.05);
+      border-color: rgba(0,255,136,.22);
+      color: var(--text);
+      transform: translateX(5px);
+    }
+    .cl-ico {
+      width: 42px; height: 42px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .cl-name { font-weight: 600; font-size: .88rem; }
+    .cl-val  { font-size: .76rem; color: var(--muted); }
+
+    /* Form */
+    .f-label {
+      font-size: .78rem; font-weight: 600;
+      color: var(--muted); letter-spacing: .05em;
+      margin-bottom: .35rem;
+    }
+    .f-input {
+      width: 100%;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      color: var(--text);
+      padding: .78rem 1rem;
+      font-family: var(--font-body);
+      font-size: .88rem;
+      transition: all .3s ease;
+    }
+    .f-input:focus {
+      background: rgba(0,255,136,.04);
+      border-color: rgba(0,255,136,.38);
+      box-shadow: 0 0 0 3px rgba(0,255,136,.09);
+      outline: none;
+      color: var(--text);
+    }
+    .f-input::placeholder { color: var(--muted); }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: #080808;
+      border-top: 1px solid var(--border);
+      padding: 1.8rem 0;
+    }
+    .footer-brand { font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; }
+    .footer-tagline { font-size: .76rem; color: var(--muted); margin-top: .15rem; }
+    .footer-icon {
+      color: var(--muted); font-size: 1.15rem;
+      transition: color .2s ease, transform .2s ease;
+      text-decoration: none;
+    }
+    .footer-icon:hover { color: var(--green); transform: translateY(-2px); }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 991px) {
+      .hero-img-frame { width: 280px; height: 360px; }
+      .h-badge { display: none; }
+      .dot-grid { display: none; }
+    }
+    @media (max-width: 768px) {
+      section { padding: 72px 0; }
+      .hero-img-frame { width: 240px; height: 300px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ================================================
+     NAVBAR
+================================================ -->
+<nav id="mainNav" class="navbar navbar-expand-lg fixed-top" aria-label="Main navigation">
+  <div class="container">
+    <a class="navbar-brand" href="#hero">The Plug<span class="plug-dot">.</span>AI</a>
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navMenu"
+            aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+      <ul class="navbar-nav gap-1">
+        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
+        <li class="nav-item"><a class="nav-link" href="#experience">Experience</a></li>
+        <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ================================================
+     HERO
+================================================ -->
+<section id="hero" aria-label="Introduction">
+
+  <!-- Ambient orbs -->
+  <div class="glow-orb" style="width:520px;height:520px;background:var(--purple);top:-120px;right:-160px;opacity:.07;"></div>
+  <div class="glow-orb" style="width:420px;height:420px;background:var(--green);bottom:-120px;left:-120px;opacity:.05;animation-delay:3.5s;"></div>
+
+  <div class="container hero-inner py-5">
+    <div class="row align-items-center g-5 min-vh-100">
+
+      <!-- Text -->
+      <div class="col-lg-6">
+        <div class="hero-eyebrow" aria-hidden="true">The Plug AI</div>
+
+        <h1 class="hero-name">
+          <span class="gradient-text">Stefan</span><br>Morris
+        </h1>
+
+        <p class="hero-subtitle">
+          <strong>AI Educator</strong> &nbsp;·&nbsp;
+          <strong>Training Developer</strong> &nbsp;·&nbsp;
+          <strong>Tech Consultant</strong>
+        </p>
+
+        <div class="hero-tagline">
+          "Get Connected, Get Skilled,<br>
+          <span class="gradient-text tw-cursor" id="twText">Get into AI.</span>"
+        </div>
+
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="#projects" class="btn-plug" aria-label="View Stefan's work">View Work</a>
+          <a href="#contact" class="btn-outline-plug" aria-label="Contact Stefan">Contact Me</a>
+        </div>
+      </div>
+
+      <!-- Image -->
+      <div class="col-lg-6 hero-img-wrap">
+        <div style="position:relative;display:inline-block;">
+
+          <div class="hero-img-frame">
+            <!--
+              PHOTO SETUP:
+              1. Save the photo as "images/stefan.jpg" in the same folder as this file.
+              2. The CSS applies contrast, brightness, and a gradient border automatically.
+            -->
+            <img
+              src="images/stefan.jpg"
+              alt="Stefan Morris — AI Educator and Founder of The Plug AI, dressed professionally in a navy suit vest with white shirt and pink tie"
+              loading="eager"
+            />
+          </div>
+
+          <!-- Floating info badges -->
+          <div class="h-badge h-badge-1" aria-hidden="true">
+            <div class="bico" style="background:rgba(0,255,136,.14);">🧠</div>
+            <div>
+              <div style="color:var(--green);font-weight:700;font-size:.76rem;">The Plug AI</div>
+              <div style="color:var(--muted);font-size:.68rem;">Founder & CEO</div>
+            </div>
+          </div>
+
+          <div class="h-badge h-badge-2" aria-hidden="true">
+            <div class="bico" style="background:rgba(123,47,190,.18);">🎓</div>
+            <div>
+              <div style="font-weight:700;font-size:.76rem;">B.S. Comp Sci</div>
+              <div style="color:var(--muted);font-size:.68rem;">Expected 2028</div>
+            </div>
+          </div>
+
+          <div class="h-badge h-badge-3" aria-hidden="true">
+            <span class="live-dot"></span>
+            <span style="font-size:.76rem;">Open to collaborations</span>
+          </div>
+
+          <!-- Dot grid decoration -->
+          <div class="dot-grid" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="scroll-hint" aria-hidden="true">
+    <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+
+<!-- ================================================
+     ABOUT
+================================================ -->
+<section id="about" aria-label="About Stefan">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+
+      <!-- Left — animated AI chat panel -->
+      <div class="col-lg-5 fade-up">
+
+        <div class="chat-panel" role="img" aria-label="Animated AI chat conversation about Stefan">
+          <div class="chat-bar">
+            <div class="c-dot" style="background:#FF5F5F;"></div>
+            <div class="c-dot" style="background:#FFBE2E;"></div>
+            <div class="c-dot" style="background:#28CA41;"></div>
+            <span style="font-size:.75rem;color:var(--muted);margin-left:.4rem;">Plug AI — Active Session</span>
+            <span class="live-dot ms-auto"></span>
+          </div>
+
+          <!-- Messages -->
+          <div class="chat-msg">
+            <div class="c-avatar" style="background:rgba(0,255,136,.12);">🤖</div>
+            <div class="c-bubble">Who is Stefan, and what does he build?</div>
+          </div>
+
+          <div class="chat-msg right">
+            <div class="c-avatar" style="background:rgba(123,47,190,.2);">S</div>
+            <div class="c-bubble">
+              Training developer by day. AI founder by mission. I build bridges between communities and technology.
+            </div>
+          </div>
+
+          <div class="chat-msg">
+            <div class="c-avatar" style="background:rgba(0,255,136,.12);">🤖</div>
+            <div class="c-bubble">What's The Plug AI?</div>
+          </div>
+
+          <div class="chat-msg right">
+            <div class="c-avatar" style="background:rgba(123,47,190,.2);">S</div>
+            <div class="c-bubble">
+              A movement. <span style="color:var(--green);font-weight:600;">Get Connected. Get Skilled. Get into AI.</span> 🔌
+            </div>
+          </div>
+
+          <div class="typing mt-1" aria-label="AI is thinking">
+            <div class="t-dot"></div>
+            <div class="t-dot"></div>
+            <div class="t-dot"></div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="row g-3 mt-2">
+          <div class="col-4">
+            <div class="stat-card">
+              <div class="stat-num">4+</div>
+              <div class="stat-lbl">Yrs Impact</div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="stat-card">
+              <div class="stat-num" style="color:var(--purple);">∞</div>
+              <div class="stat-lbl">Community</div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="stat-card">
+              <div class="stat-num" style="font-size:1.7rem;">2028</div>
+              <div class="stat-lbl">CS Degree</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right — bio -->
+      <div class="col-lg-7 fade-up d2">
+        <p class="section-label">About Me</p>
+        <h2 class="section-title">
+          Plugging Communities<br>Into the <span class="gradient-text">AI Era</span>
+        </h2>
+        <p style="color:rgba(245,245,245,.75);line-height:1.82;margin-bottom:1.4rem;font-size:1.01rem;">
+          I'm Stefan Morris — a training developer, AI educator, and founder who believes that access
+          to artificial intelligence shouldn't be a privilege. I'm on a mission to bring real, applicable
+          tech skills into the communities that need them most.
+        </p>
+        <p style="color:rgba(245,245,245,.62);line-height:1.8;margin-bottom:2rem;font-size:.93rem;">
+          By day I develop training programs at
+          <strong style="color:var(--text);">BigHeart Health</strong>, equipping staff with tools to
+          serve communities with excellence. As founder of
+          <strong style="color:var(--green);">The Plug AI</strong>, I design and deliver AI literacy
+          curriculum, workshops, and resources that make technology tangible. I'm currently pursuing my
+          <strong style="color:var(--text);">B.S. in Computer Science</strong> at Maestro University
+          (expected 2028), building the technical foundation to match the vision.
+        </p>
+        <div class="d-flex gap-3 flex-wrap align-items-center">
+          <a href="#contact" class="btn-plug">Let's Connect</a>
+          <div style="display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.84rem;">
+            <span class="live-dot"></span>
+            Open to collaborations
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+
+<!-- ================================================
+     SKILLS
+================================================ -->
+<section id="skills" aria-label="Skills and certifications">
+  <div class="container">
+
+    <div class="text-center mb-5 fade-up">
+      <p class="section-label">Capabilities</p>
+      <h2 class="section-title">Skills &amp; <span class="gradient-text">Certifications</span></h2>
+      <p style="color:var(--muted);max-width:480px;margin:0 auto;font-size:.93rem;">
+        A toolkit built at the intersection of education, technology, and community impact.
+      </p>
+    </div>
+
+    <!-- Three skill cards -->
+    <div class="row g-4 mb-4">
+      <div class="col-lg-4 fade-up d1">
+        <div class="skill-card green">
+          <div class="sk-icon" style="background:rgba(0,255,136,.1);">🧠</div>
+          <div class="sk-title">AI &amp; Education</div>
+          <div>
+            <span class="badge-pill">AI Curriculum Design</span>
+            <span class="badge-pill">Community Tech Education</span>
+            <span class="badge-pill">AI Literacy Workshops</span>
+            <span class="badge-pill">Training Development</span>
+            <span class="badge-pill">EdTech Integration</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 fade-up d2">
+        <div class="skill-card purple">
+          <div class="sk-icon" style="background:rgba(123,47,190,.15);">🎨</div>
+          <div class="sk-title">Design &amp; Tools</div>
+          <div>
+            <span class="badge-pill p">Canva</span>
+            <span class="badge-pill p">Google Workspace</span>
+            <span class="badge-pill p">HTML / CSS</span>
+            <span class="badge-pill p">Bootstrap 5</span>
+            <span class="badge-pill p">Visual Communication</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 fade-up d3">
+        <div class="skill-card cyan">
+          <div class="sk-icon" style="background:rgba(0,207,255,.1);">⚙️</div>
+          <div class="sk-title">Dev &amp; Technical</div>
+          <div>
+            <span class="badge-pill">Python</span>
+            <span class="badge-pill">IT Support</span>
+            <span class="badge-pill">UX Design</span>
+            <span class="badge-pill">Problem Solving</span>
+            <span class="badge-pill">Leadership</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terminal + Certs row -->
+    <div class="row g-4 align-items-start">
+
+      <!-- Terminal animation -->
+      <div class="col-lg-6 fade-up d1">
+        <div class="terminal" role="img" aria-label="Animated terminal showing Stefan's profile">
+          <div class="term-bar">
+            <div class="term-dot" style="background:#FF5F5F;"></div>
+            <div class="term-dot" style="background:#FFBE2E;"></div>
+            <div class="term-dot" style="background:#28CA41;"></div>
+            <span style="color:var(--muted);font-size:.76rem;margin-left:.5rem;font-family:monospace;">stefan@plug-ai ~ %</span>
+          </div>
+          <div class="term-body" aria-hidden="true">
+            <div class="t-line"><span class="tp">$</span><span class="tc">whoami</span></div>
+            <div class="t-line"><span class="to">→ stefan_morris [AI Educator | Founder | Dev]</span></div>
+            <div class="t-line"><span class="tp">$</span><span class="tc">plug-ai --status</span></div>
+            <div class="t-line"><span class="ts">✓ Mission:&nbsp;&nbsp;&nbsp;</span><span class="to">Active</span></div>
+            <div class="t-line"><span class="ts">✓ Community:</span><span class="to"> Fully Connected</span></div>
+            <div class="t-line"><span class="tp">$</span><span class="tc">skills --list</span></div>
+            <div class="t-line"><span class="th">Loading:</span><span class="to"> AI, Education, Design, Dev, Leadership…</span></div>
+            <div class="t-line"><span class="ts">▓▓▓▓▓▓▓▓▓▓ 100% — Fully Loaded.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certifications -->
+      <div class="col-lg-6 fade-up d2">
+        <h3 style="font-size:.78rem;font-weight:700;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem;font-family:var(--font-body);">
+          Certifications
+        </h3>
+
+        <div class="cert-row" role="listitem">
+          <div class="cert-ico" style="background:rgba(66,133,244,.14);">🔵</div>
+          <div>
+            <div class="cert-name">Google IT Support Professional</div>
+            <div class="cert-issuer">Google · Coursera</div>
+          </div>
+          <div class="cert-badge-pill">Certified</div>
+        </div>
+
+        <div class="cert-row" role="listitem">
+          <div class="cert-ico" style="background:rgba(0,100,255,.14);">🔷</div>
+          <div>
+            <div class="cert-name">IBM IT Support Professional</div>
+            <div class="cert-issuer">IBM · Coursera</div>
+          </div>
+          <div class="cert-badge-pill">Certified</div>
+        </div>
+
+        <div class="cert-row" role="listitem">
+          <div class="cert-ico" style="background:rgba(234,67,53,.14);">🎨</div>
+          <div>
+            <div class="cert-name">Google UX Design Professional</div>
+            <div class="cert-issuer">Google · Coursera</div>
+          </div>
+          <div class="cert-badge-pill">Certified</div>
+        </div>
+
+        <div class="cert-row" role="listitem">
+          <div class="cert-ico" style="background:rgba(66,133,244,.14);">🐍</div>
+          <div>
+            <div class="cert-name">Python for Everybody</div>
+            <div class="cert-issuer">Google · Coursera</div>
+          </div>
+          <div class="cert-badge-pill">Certified</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+
+<!-- ================================================
+     EXPERIENCE
+================================================ -->
+<section id="experience" aria-label="Work experience">
+  <div class="container">
+    <div class="row g-5">
+
+      <!-- Left panel -->
+      <div class="col-lg-4 fade-up">
+        <p class="section-label">Career</p>
+        <h2 class="section-title">
+          Where I've<br><span class="gradient-text">Made Impact</span>
+        </h2>
+        <p style="color:var(--muted);font-size:.93rem;line-height:1.75;margin-bottom:2rem;">
+          Every role has been about one thing: helping people access what they need — knowledge, tools, and opportunity.
+        </p>
+        <div style="display:flex;justify-content:center;">
+          <div class="pulse-rings" role="img" aria-label="Connection pulse animation" style="width:100px;height:100px;">
+            <div class="p-ring"></div>
+            <div class="p-ring"></div>
+            <div class="p-ring"></div>
+            <div class="p-center">🔌</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="col-lg-8 fade-up d2">
+        <div class="timeline">
+
+          <!-- 1: The Plug AI -->
+          <div class="tl-item">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-card">
+              <div class="tl-period">2023 — Present</div>
+              <div class="tl-role">Founder &amp; AI Educator</div>
+              <div class="tl-company">The Plug AI</div>
+              <div class="tl-desc">
+                Founded and lead The Plug AI — a platform making artificial intelligence accessible and practical
+                for underserved communities. Design and deliver AI literacy curriculum, workshops, and resources
+                that bridge the gap between technology and everyday people.
+              </div>
+              <div class="tl-tags">
+                <span class="tl-tag">AI Education</span>
+                <span class="tl-tag">Curriculum Design</span>
+                <span class="tl-tag">Community Leadership</span>
+                <span class="tl-tag">Entrepreneurship</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2: BigHeart Health -->
+          <div class="tl-item">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-card">
+              <div class="tl-period" style="color:var(--purple);">2022 — Present</div>
+              <div class="tl-role">Training Developer &amp; Community Health Engagement</div>
+              <div class="tl-company">BigHeart Health</div>
+              <div class="tl-desc">
+                Develop comprehensive training programs for staff, integrating technology and best practices in
+                community health engagement. Create educational materials, facilitate workshops, and drive
+                professional development initiatives across the organization.
+              </div>
+              <div class="tl-tags">
+                <span class="tl-tag">Training Development</span>
+                <span class="tl-tag">Healthcare</span>
+                <span class="tl-tag">Program Design</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3: Apollo -->
+          <div class="tl-item">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-card">
+              <div class="tl-period" style="color:#00CFFF;">2020 — 2022</div>
+              <div class="tl-role">Site Director</div>
+              <div class="tl-company">Apollo After Schools</div>
+              <div class="tl-desc">
+                Led after-school programming for youth, overseeing curriculum delivery, staff management,
+                and family engagement. Introduced technology-centered activities to build digital literacy
+                and prepare students for a connected future.
+              </div>
+              <div class="tl-tags">
+                <span class="tl-tag">Leadership</span>
+                <span class="tl-tag">Youth Education</span>
+                <span class="tl-tag">Program Management</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4: Mount Sinai -->
+          <div class="tl-item">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-card">
+              <div class="tl-period" style="color:#FF7B7B;">Prior Experience</div>
+              <div class="tl-role">Staff &amp; Community Services</div>
+              <div class="tl-company">Mount Sinai Hospital</div>
+              <div class="tl-desc">
+                Served in a community-facing capacity at a major NYC medical institution, gaining deep experience
+                in healthcare environments, patient interaction, and operational support within a fast-paced,
+                mission-critical setting.
+              </div>
+              <div class="tl-tags">
+                <span class="tl-tag">Healthcare</span>
+                <span class="tl-tag">Community Services</span>
+                <span class="tl-tag">New York City</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+
+<!-- ================================================
+     PROJECTS
+================================================ -->
+<section id="projects" aria-label="Featured projects">
+  <div class="container">
+
+    <div class="text-center mb-5 fade-up">
+      <p class="section-label">Portfolio</p>
+      <h2 class="section-title">Featured <span class="gradient-text">Projects</span></h2>
+      <p style="color:var(--muted);max-width:460px;margin:0 auto;font-size:.93rem;">
+        Work at the intersection of AI, education, and community — built with purpose.
+      </p>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Project 1 — Neural / AI Curriculum -->
+      <div class="col-lg-6 fade-up d1">
+        <div class="proj-card">
+          <div class="proj-vis" role="img" aria-label="Animated neural network representing AI curriculum">
+            <!-- SVG neural network animation -->
+            <svg class="nn-svg" style="position:absolute;inset:0;width:100%;height:100%;opacity:.18;" aria-hidden="true">
+              <defs>
+                <filter id="glow1"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <!-- Connections -->
+              <line x1="18%" y1="30%" x2="50%" y2="22%" stroke="#00FF88" stroke-width="1" stroke-dasharray="5 4"><animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1.8s" repeatCount="indefinite"/></line>
+              <line x1="18%" y1="50%" x2="50%" y2="22%" stroke="#00FF88" stroke-width="1" stroke-dasharray="5 4"><animate attributeName="stroke-dashoffset" from="0" to="-18" dur="2.2s" repeatCount="indefinite"/></line>
+              <line x1="18%" y1="70%" x2="50%" y2="50%" stroke="#7B2FBE" stroke-width="1" stroke-dasharray="5 4"><animate attributeName="stroke-dashoffset" from="0" to="-18" dur="2s" repeatCount="indefinite"/></line>
+              <line x1="18%" y1="50%" x2="50%" y2="78%" stroke="#00CFFF" stroke-width="1" stroke-dasharray="5 4"><animate attributeName="stroke-dashoffset" from="0" to="-18" dur="2.4s" repeatCount="indefinite"/></line>
+              <line x1="50%" y1="22%" x2="82%" y2="38%" stroke="#00FF88" stroke-width="1" stroke-dasharray="5 4"><animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1.6s" repeatCount="indefinite"/></line>
+              <line x1="50%" y1="50%" x2="82%" y2="60%" stroke="#7B2FBE" stroke-width="1" stroke-dasharray="5 4"><animate attributeName="stroke-dashoffset" from="0" to="-18" dur="2s" repeatCount="indefinite"/></line>
+              <line x1="50%" y1="78%" x2="82%" y2="60%" stroke="#00CFFF" stroke-width="1" stroke-dasharray="5 4"><animate attributeName="stroke-dashoffset" from="0" to="-18" dur="2.6s" repeatCount="indefinite"/></line>
+              <!-- Nodes -->
+              <circle cx="18%" cy="30%" r="8" fill="#00FF88" filter="url(#glow1)"><animate attributeName="opacity" values=".3;1;.3" dur="1.5s" repeatCount="indefinite"/></circle>
+              <circle cx="18%" cy="50%" r="8" fill="#7B2FBE" filter="url(#glow1)"><animate attributeName="opacity" values=".4;.9;.4" dur="2s" repeatCount="indefinite"/></circle>
+              <circle cx="18%" cy="70%" r="8" fill="#00FF88" filter="url(#glow1)"><animate attributeName="opacity" values=".3;1;.3" dur="1.8s" repeatCount="indefinite"/></circle>
+              <circle cx="50%" cy="22%" r="10" fill="#00FF88" filter="url(#glow1)"><animate attributeName="opacity" values=".5;1;.5" dur="1.2s" repeatCount="indefinite"/></circle>
+              <circle cx="50%" cy="50%" r="10" fill="#7B2FBE" filter="url(#glow1)"><animate attributeName="opacity" values=".4;1;.4" dur="1.6s" repeatCount="indefinite"/></circle>
+              <circle cx="50%" cy="78%" r="10" fill="#00CFFF" filter="url(#glow1)"><animate attributeName="opacity" values=".3;.9;.3" dur="2.1s" repeatCount="indefinite"/></circle>
+              <circle cx="82%" cy="38%" r="12" fill="#00FF88" filter="url(#glow1)"><animate attributeName="r" values="10;14;10" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;1;.5" dur="2s" repeatCount="indefinite"/></circle>
+              <circle cx="82%" cy="60%" r="12" fill="#7B2FBE" filter="url(#glow1)"><animate attributeName="r" values="10;14;10" dur="2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".4;1;.4" dur="2.4s" repeatCount="indefinite"/></circle>
+            </svg>
+            <div style="position:relative;z-index:2;text-align:center;">
+              <div style="font-size:2.4rem;margin-bottom:.25rem;">🧠</div>
+              <div style="font-size:.7rem;color:var(--green);letter-spacing:.12em;text-transform:uppercase;font-weight:700;">Neural Curriculum</div>
+            </div>
+          </div>
+          <div class="proj-info">
+            <div class="proj-cat">AI Education</div>
+            <h3 class="proj-title">The Plug AI Curriculum Framework</h3>
+            <p class="proj-desc">
+              A modular AI literacy curriculum designed for communities with zero technical background.
+              Covers AI fundamentals, real-world applications, ethical considerations, and hands-on
+              prompt engineering — built to be taught by anyone, learned by everyone.
+            </p>
+            <div class="proj-foot">
+              <div class="tech-tags">
+                <span class="tech-tag">AI Literacy</span>
+                <span class="tech-tag">Curriculum</span>
+                <span class="tech-tag">Workshops</span>
+              </div>
+              <a href="#contact" class="proj-link" aria-label="Inquire about AI Curriculum project">
+                <i class="bi bi-arrow-up-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2 — Data / Training Dashboard -->
+      <div class="col-lg-6 fade-up d2">
+        <div class="proj-card">
+          <div class="proj-vis" role="img" aria-label="Animated bar chart representing training metrics">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;width:100%;">
+              <div class="chart-wrap">
+                <div class="c-bar"></div>
+                <div class="c-bar"></div>
+                <div class="c-bar"></div>
+                <div class="c-bar"></div>
+                <div class="c-bar"></div>
+                <div class="c-bar"></div>
+              </div>
+              <div style="display:flex;gap:2rem;">
+                <div style="text-align:center;">
+                  <div style="font-size:1.15rem;font-weight:800;color:var(--green);font-family:var(--font-display);"><span id="c1">0</span>+</div>
+                  <div style="font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;">Learners</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-size:1.15rem;font-weight:800;color:var(--purple);font-family:var(--font-display);"><span id="c2">0</span>+</div>
+                  <div style="font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;">Sessions</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-size:1.15rem;font-weight:800;color:#00CFFF;font-family:var(--font-display);"><span id="c3">0</span>%</div>
+                  <div style="font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;">Satisfaction</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="proj-info">
+            <div class="proj-cat">Training Development</div>
+            <h3 class="proj-title">BigHeart Staff Training Program</h3>
+            <p class="proj-desc">
+              Comprehensive staff development program at BigHeart Health integrating digital tools,
+              community health protocols, and patient engagement strategies. Includes onboarding modules,
+              skill assessments, and ongoing professional development tracks.
+            </p>
+            <div class="proj-foot">
+              <div class="tech-tags">
+                <span class="tech-tag">Training</span>
+                <span class="tech-tag">Healthcare</span>
+                <span class="tech-tag">Google Workspace</span>
+              </div>
+              <a href="#contact" class="proj-link" aria-label="Inquire about training program">
+                <i class="bi bi-arrow-up-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 3 — The Plug AI Platform -->
+      <div class="col-lg-6 fade-up d1">
+        <div class="proj-card">
+          <div class="proj-vis" role="img" aria-label="Animated code representing The Plug AI platform">
+            <div class="code-wrap">
+              <div class="c-line"><span class="cm"># the_plug_ai.py</span></div>
+              <div class="c-line"><span class="ck">class</span> <span class="cf">PlugAI</span><span style="color:#888;">:</span></div>
+              <div class="c-line">&nbsp;&nbsp;<span class="ck">def</span> <span class="cf">connect</span><span style="color:#888;">(self, community):</span></div>
+              <div class="c-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="ck">return</span> <span class="cs">"Bridging the gap 🔌"</span></div>
+              <div class="c-line">&nbsp;&nbsp;<span class="ck">def</span> <span class="cf">educate</span><span style="color:#888;">(self, learner):</span></div>
+              <div class="c-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="ck">return</span> learner.<span class="cf">level_up</span>() <span class="cm"># ✓</span></div>
+            </div>
+          </div>
+          <div class="proj-info">
+            <div class="proj-cat">Tech Entrepreneurship</div>
+            <h3 class="proj-title">The Plug AI — Brand &amp; Platform</h3>
+            <p class="proj-desc">
+              Built The Plug AI from the ground up — brand identity, content strategy, curriculum delivery
+              system, and community outreach. A complete tech education ecosystem rooted in the belief
+              that AI belongs to everyone.
+            </p>
+            <div class="proj-foot">
+              <div class="tech-tags">
+                <span class="tech-tag">Branding</span>
+                <span class="tech-tag">Strategy</span>
+                <span class="tech-tag">HTML/CSS</span>
+                <span class="tech-tag">Canva</span>
+              </div>
+              <a href="#contact" class="proj-link" aria-label="Learn about The Plug AI platform">
+                <i class="bi bi-arrow-up-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 4 — Community Workshop -->
+      <div class="col-lg-6 fade-up d2">
+        <div class="proj-card">
+          <div class="proj-vis" role="img" aria-label="Animated orbit representing community reach">
+            <div style="position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center;">
+              <!-- Expanding rings -->
+              <div style="position:absolute;width:120px;height:120px;border-radius:50%;border:1.5px solid rgba(0,255,136,.18);animation:ringOut 3.5s ease-out infinite;"></div>
+              <div style="position:absolute;width:120px;height:120px;border-radius:50%;border:1.5px solid rgba(123,47,190,.18);animation:ringOut 3.5s ease-out infinite;animation-delay:1.15s;"></div>
+              <div style="position:absolute;width:120px;height:120px;border-radius:50%;border:1.5px solid rgba(0,207,255,.18);animation:ringOut 3.5s ease-out infinite;animation-delay:2.3s;"></div>
+              <!-- Center -->
+              <div style="width:52px;height:52px;border-radius:50%;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.28);display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 0 22px rgba(0,255,136,.18);">🌍</div>
+              <!-- Orbiting dots -->
+              <div style="position:absolute;width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:orbit1 4s linear infinite;"></div>
+              <div style="position:absolute;width:8px;height:8px;border-radius:50%;background:var(--purple);box-shadow:0 0 8px var(--purple);animation:orbit2 6s linear infinite;"></div>
+            </div>
+            <style>
+              @keyframes orbit1 { from{transform:rotate(0deg) translateX(45px);}to{transform:rotate(360deg) translateX(45px);} }
+              @keyframes orbit2 { from{transform:rotate(130deg) translateX(56px);}to{transform:rotate(490deg) translateX(56px);} }
+            </style>
+          </div>
+          <div class="proj-info">
+            <div class="proj-cat">Community Impact</div>
+            <h3 class="proj-title">Community AI Workshop Series</h3>
+            <p class="proj-desc">
+              A recurring workshop series bringing AI education directly to community centers, schools,
+              and health organizations. Practical, jargon-free sessions covering AI tools, digital literacy,
+              and career pathways in tech. <em style="color:var(--muted);">[Add your details here]</em>
+            </p>
+            <div class="proj-foot">
+              <div class="tech-tags">
+                <span class="tech-tag">Workshops</span>
+                <span class="tech-tag">Outreach</span>
+                <span class="tech-tag">AI Tools</span>
+              </div>
+              <a href="#contact" class="proj-link" aria-label="Inquire about workshop series">
+                <i class="bi bi-arrow-up-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+
+<!-- ================================================
+     CONTACT
+================================================ -->
+<section id="contact" aria-label="Contact Stefan Morris">
+  <div class="container">
+
+    <div class="text-center mb-5 fade-up">
+      <p class="section-label">Get in Touch</p>
+      <h2 class="section-title">Let's <span class="gradient-text">Build Together</span></h2>
+      <p style="color:var(--muted);max-width:460px;margin:0 auto;font-size:.93rem;">
+        Whether you're looking to collaborate, commission a workshop, or just connect — I'm here for it.
+      </p>
+    </div>
+
+    <div class="row g-5 justify-content-center">
+
+      <!-- Links -->
+      <div class="col-lg-4 fade-up d1">
+        <div class="contact-card mb-4">
+          <h3 style="font-size:.76rem;font-weight:700;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.2rem;font-family:var(--font-body);">
+            Direct Links
+          </h3>
+
+          <a href="mailto:morrisstephon51@gmail.com" class="contact-link" aria-label="Email Stefan Morris">
+            <div class="cl-ico" style="background:rgba(0,255,136,.1);">
+              <i class="bi bi-envelope-fill" style="color:var(--green);"></i>
+            </div>
+            <div>
+              <div class="cl-name">Email</div>
+              <div class="cl-val">morrisstephon51@gmail.com</div>
+            </div>
+          </a>
+
+          <a href="#" class="contact-link" aria-label="Stefan's LinkedIn profile">
+            <div class="cl-ico" style="background:rgba(10,102,194,.15);">
+              <i class="bi bi-linkedin" style="color:#0A66C2;"></i>
+            </div>
+            <div>
+              <div class="cl-name">LinkedIn</div>
+              <div class="cl-val">Connect professionally</div>
+            </div>
+          </a>
+
+          <a href="#" class="contact-link" aria-label="Stefan's Instagram — The Plug AI">
+            <div class="cl-ico" style="background:rgba(225,48,108,.12);">
+              <i class="bi bi-instagram" style="color:#E1306C;"></i>
+            </div>
+            <div>
+              <div class="cl-name">Instagram</div>
+              <div class="cl-val">@theplugai</div>
+            </div>
+          </a>
+
+          <a href="#" class="contact-link" aria-label="Stefan's GitHub profile">
+            <div class="cl-ico" style="background:rgba(255,255,255,.07);">
+              <i class="bi bi-github" style="color:var(--text);"></i>
+            </div>
+            <div>
+              <div class="cl-name">GitHub</div>
+              <div class="cl-val">View code projects</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="col-lg-6 fade-up d2">
+        <div class="contact-card">
+          <h3 style="font-size:.76rem;font-weight:700;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.5rem;font-family:var(--font-body);">
+            Send a Message
+          </h3>
+
+          <form action="mailto:morrisstephon51@gmail.com" method="POST" enctype="text/plain" aria-label="Contact form">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="f-label" for="cName">Name</label>
+                <input type="text" id="cName" name="name" class="f-input"
+                       placeholder="Your name" required aria-required="true" />
+              </div>
+              <div class="col-md-6">
+                <label class="f-label" for="cEmail">Email</label>
+                <input type="email" id="cEmail" name="email" class="f-input"
+                       placeholder="your@email.com" required aria-required="true" />
+              </div>
+              <div class="col-12">
+                <label class="f-label" for="cSubject">Subject</label>
+                <input type="text" id="cSubject" name="subject" class="f-input"
+                       placeholder="What's this about?" />
+              </div>
+              <div class="col-12">
+                <label class="f-label" for="cMsg">Message</label>
+                <textarea id="cMsg" name="message" class="f-input"
+                          rows="5" placeholder="Tell me about your project, idea, or just say hi…"
+                          required aria-required="true"></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn-plug w-100" style="text-align:center;">
+                  Send Message &nbsp;<i class="bi bi-arrow-up-right"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================
+     FOOTER
+================================================ -->
+<footer role="contentinfo">
+  <div class="container">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+
+      <div>
+        <div class="footer-brand">The Plug<span style="color:var(--green);">.</span>AI</div>
+        <div class="footer-tagline">"Get Connected, Get Skilled, Get into AI"</div>
+      </div>
+
+      <div style="color:var(--muted);font-size:.8rem;text-align:center;">
+        © 2025 Stefan Morris &nbsp;·&nbsp; The Plug AI &nbsp;·&nbsp; All rights reserved
+      </div>
+
+      <div class="d-flex gap-3">
+        <a href="mailto:morrisstephon51@gmail.com" class="footer-icon" aria-label="Email"><i class="bi bi-envelope"></i></a>
+        <a href="#" class="footer-icon" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+        <a href="#" class="footer-icon" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+        <a href="#" class="footer-icon" aria-label="GitHub"><i class="bi bi-github"></i></a>
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  /* ── Navbar scroll class + active link ── */
+  const nav = document.getElementById('mainNav');
+  const sections = document.querySelectorAll('section[id]');
+  const links    = document.querySelectorAll('.nav-link');
+
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+    let cur = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 130) cur = s.id; });
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + cur));
+  }, { passive: true });
+
+  /* ── Fade-in on scroll ── */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  /* ── Typewriter ── */
+  (function () {
+    const el = document.getElementById('twText');
+    if (!el) return;
+    const txt = 'Get into AI.';
+    el.textContent = '';
+    let i = 0;
+    const tick = () => { if (i < txt.length) { el.textContent += txt[i++]; setTimeout(tick, 75); } };
+    setTimeout(tick, 1400);
+  })();
+
+  /* ── Animated counters (project cards) ── */
+  function counter(id, target, ms) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let v = 0;
+    const step = target / (ms / 16);
+    const t = setInterval(() => {
+      v = Math.min(v + step, target);
+      el.textContent = Math.floor(v);
+      if (v >= target) clearInterval(t);
+    }, 16);
+  }
+
+  const cObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        counter('c1', 200, 1400);
+        counter('c2', 50,  1100);
+        counter('c3', 97,  950);
+        cObs.disconnect();
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const c1el = document.getElementById('c1');
+  if (c1el) cObs.observe(c1el.closest('.proj-card'));
+
+  /* ── Smooth scroll + close mobile nav ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const tgt = document.querySelector(a.getAttribute('href'));
+      if (!tgt) return;
+      e.preventDefault();
+      tgt.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const menu = document.getElementById('navMenu');
+      if (menu?.classList.contains('show')) bootstrap.Collapse.getInstance(menu)?.hide();
+    });
+  });
+</script>
+
+</body>
+</html>
