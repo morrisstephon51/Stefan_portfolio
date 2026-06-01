@@ -19,35 +19,34 @@
 
   <style>
     /* =============================================
-       DESIGN TOKENS — Light / Vibrant Theme
+       DESIGN TOKENS — Dark Theme
        Brand Vault Colors:
-         Electric Green  #00C16A
+         Electric Green  #00FF88
          Deep Purple     #7B2FBE
          Sky Cyan        #00CFFF
          Coral Pop       #FF6B6B
          Sunny Yellow    #FFD93D
-         Light Mint bg   #F0FFF8
-         Light Lavender  #F5EEFF
-         Text Dark       #111827
+         Dark BG         #0D0D0D
+         Card BG         #141420
     ============================================= */
     :root {
-      --bg-primary:    #FFFFFF;
-      --bg-secondary:  #F7FFF9;
-      --bg-alt:        #F5EEFF;
-      --bg-card:       #FFFFFF;
-      --green:         #00C16A;
-      --green-light:   #E6FFF2;
+      --bg-primary:    #0D0D0D;
+      --bg-secondary:  #0F1419;
+      --bg-alt:        #12082A;
+      --bg-card:       #141420;
+      --green:         #00FF88;
+      --green-light:   rgba(0,255,136,.12);
       --purple:        #7B2FBE;
-      --purple-light:  #F3EEFF;
+      --purple-light:  rgba(123,47,190,.15);
       --coral:         #FF6B6B;
       --yellow:        #FFD93D;
       --cyan:          #00CFFF;
-      --text:          #111827;
-      --muted:         #6B7280;
-      --border:        rgba(0,0,0,0.08);
-      --glow-g:        0 8px 32px rgba(0,193,106,.25), 0 2px 8px rgba(0,193,106,.1);
-      --glow-p:        0 8px 32px rgba(123,47,190,.22), 0 2px 8px rgba(123,47,190,.1);
-      --shadow-card:   0 4px 24px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04);
+      --text:          #F0F0F0;
+      --muted:         #9CA3AF;
+      --border:        rgba(255,255,255,0.08);
+      --glow-g:        0 8px 32px rgba(0,255,136,.3), 0 2px 8px rgba(0,255,136,.15);
+      --glow-p:        0 8px 32px rgba(123,47,190,.35), 0 2px 8px rgba(123,47,190,.15);
+      --shadow-card:   0 4px 24px rgba(0,0,0,.5), 0 1px 4px rgba(0,0,0,.3);
       --font-body:     'Space Grotesk', sans-serif;
       --font-display:  'Syne', sans-serif;
     }
@@ -136,14 +135,14 @@
        SCROLLBAR
     ============================================= */
     ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-track { background: #111; }
     ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
 
     /* =============================================
        NAVBAR
     ============================================= */
     #mainNav {
-      background: rgba(255,255,255,.95);
+      background: rgba(13,13,13,.92);
       backdrop-filter: blur(22px);
       border-bottom: 1px solid var(--border);
       padding: 1rem 0;
@@ -151,7 +150,7 @@
     }
     #mainNav.scrolled {
       padding: .55rem 0;
-      box-shadow: 0 4px 24px rgba(0,0,0,.08);
+      box-shadow: 0 4px 24px rgba(0,0,0,.5);
     }
 
     .navbar-brand {
@@ -186,7 +185,7 @@
     .nav-link:hover::after, .nav-link.active::after { transform: translateX(-50%) scaleX(1); }
 
     .navbar-toggler { border-color: var(--border); }
-    .navbar-toggler-icon { filter: none; }
+    .navbar-toggler-icon { filter: invert(1); }
 
     /* =============================================
        BUTTONS
@@ -251,7 +250,7 @@
       position: relative;
       overflow: hidden;
       padding: 0;
-      background: linear-gradient(135deg, #F0FFF8 0%, #FFFFFF 40%, #F5EEFF 100%);
+      background: var(--bg-primary);
     }
 
     /* Soft animated grid */
@@ -259,8 +258,8 @@
       content: '';
       position: absolute; inset: 0;
       background-image:
-        linear-gradient(rgba(0,193,106,.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,193,106,.06) 1px, transparent 1px);
+        linear-gradient(rgba(0,255,136,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,.06) 1px, transparent 1px);
       background-size: 55px 55px;
       animation: gridScroll 30s linear infinite;
     }
@@ -274,7 +273,7 @@
       position: absolute; top: 50%; left: 50%;
       transform: translate(-50%,-50%);
       width: 80vw; height: 80vh;
-      background: radial-gradient(ellipse, rgba(123,47,190,.06) 0%, transparent 68%);
+      background: radial-gradient(ellipse, rgba(123,47,190,.15) 0%, transparent 68%);
       pointer-events: none;
     }
 
@@ -370,7 +369,7 @@
       content: '';
       position: absolute; bottom: 0; left: 0; right: 0;
       height: 30%;
-      background: linear-gradient(to top, rgba(245,238,255,.6), transparent);
+      background: linear-gradient(to top, rgba(18,8,42,.7), transparent);
       pointer-events: none;
     }
 
@@ -384,11 +383,10 @@
     }
     .hero-img-frame:hover img { transform: scale(1.04); }
 
-    /* Floating badges — now bright & white */
     .h-badge {
       position: absolute;
-      background: #fff;
-      border: 1px solid var(--border);
+      background: rgba(20,20,32,.9);
+      border: 1px solid rgba(255,255,255,.12);
       border-radius: 14px;
       padding: .55rem 1rem;
       font-size: .78rem;
@@ -458,7 +456,7 @@
     }
     .scroll-mouse {
       width: 22px; height: 34px;
-      border: 2px solid rgba(0,0,0,.2);
+      border: 2px solid rgba(255,255,255,.2);
       border-radius: 11px;
       display: flex; justify-content: center;
       padding-top: 5px;
@@ -481,7 +479,7 @@
     #about { background: var(--bg-secondary); }
 
     .chat-panel {
-      background: #fff;
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 22px;
       padding: 1.5rem;
@@ -528,7 +526,7 @@
     }
 
     .c-bubble {
-      background: #F4F6F8;
+      background: rgba(255,255,255,.07);
       border-radius: 12px;
       padding: .65rem .95rem;
       font-size: .84rem;
@@ -545,7 +543,7 @@
     .typing {
       display: flex; align-items: center; gap: 4px;
       padding: .5rem .9rem;
-      background: #F4F6F8;
+      background: rgba(255,255,255,.07);
       border-radius: 12px;
       width: fit-content;
     }
@@ -562,7 +560,7 @@
     }
 
     .stat-card {
-      background: #fff;
+      background: var(--bg-card);
       border: 1.5px solid var(--border);
       border-radius: 18px;
       padding: 1.4rem 1rem;
@@ -611,7 +609,7 @@
     #skills { background: var(--bg-alt); }
 
     .skill-card {
-      background: #fff;
+      background: var(--bg-card);
       border: 1.5px solid var(--border);
       border-radius: 22px;
       padding: 2rem;
@@ -642,8 +640,8 @@
 
     .badge-pill {
       display: inline-flex; align-items: center; gap: .35rem;
-      background: #F4F6F8;
-      border: 1px solid transparent;
+      background: rgba(255,255,255,.07);
+      border: 1px solid var(--border);
       border-radius: 50px;
       padding: .32rem .85rem;
       font-size: .78rem; font-weight: 600;
@@ -654,7 +652,7 @@
     .badge-pill:hover {
       background: var(--green-light);
       border-color: var(--green);
-      color: #007A44;
+      color: var(--green);
     }
     .badge-pill.p:hover {
       background: var(--purple-light);
@@ -662,25 +660,24 @@
       color: var(--purple);
     }
 
-    /* Terminal — light theme */
     .terminal {
-      background: #FAFAFA;
-      border: 1.5px solid #E5E7EB;
+      background: #0A0A0F;
+      border: 1.5px solid rgba(255,255,255,.1);
       border-radius: 18px;
       overflow: hidden;
       box-shadow: var(--shadow-card);
     }
     .term-bar {
-      background: #F3F4F6;
+      background: #111118;
       padding: .7rem 1rem;
       display: flex; align-items: center; gap: .45rem;
-      border-bottom: 1px solid #E5E7EB;
+      border-bottom: 1px solid rgba(255,255,255,.07);
     }
     .term-dot { width: 11px; height: 11px; border-radius: 50%; }
     .term-body {
       padding: 1.1rem 1.2rem;
       font-family: 'Courier New', monospace;
-      font-size: .8rem; line-height: 1.75; color: #4B5563;
+      font-size: .8rem; line-height: 1.75; color: #C9D1D9;
     }
     .t-line {
       display: flex; gap: .5rem;
@@ -699,15 +696,15 @@
       to   { opacity:1; transform: none; }
     }
     .tp { color: var(--green); font-weight: 700; }
-    .tc { color: #111827; font-weight: 600; }
-    .to { color: #9CA3AF; }
+    .tc { color: var(--text); font-weight: 600; }
+    .to { color: #6C7086; }
     .ts { color: #059669; font-weight: 600; }
     .th { color: var(--purple); font-weight: 600; }
 
     /* Cert badges */
     .cert-row {
       display: flex; align-items: center; gap: 1rem;
-      background: #fff;
+      background: var(--bg-card);
       border: 1.5px solid var(--border);
       border-radius: 14px;
       padding: .95rem 1.1rem;
@@ -762,7 +759,7 @@
     .tl-dot {
       position: absolute; left: -2.5rem; top: .35rem;
       width: 18px; height: 18px; border-radius: 50%;
-      background: var(--green); border: 3px solid #fff;
+      background: var(--green); border: 3px solid var(--bg-primary);
       box-shadow: 0 0 0 3px rgba(0,193,106,.25);
     }
     .tl-item:nth-child(2) .tl-dot { background: var(--purple); box-shadow: 0 0 0 3px rgba(123,47,190,.2); }
@@ -770,7 +767,7 @@
     .tl-item:nth-child(4) .tl-dot { background: var(--coral);  box-shadow: 0 0 0 3px rgba(255,107,107,.2); }
 
     .tl-card {
-      background: #fff;
+      background: var(--bg-card);
       border: 1.5px solid var(--border);
       border-radius: 18px; padding: 1.5rem;
       transition: all .3s ease;
@@ -785,14 +782,14 @@
     .tl-period { font-size: .72rem; font-weight: 700; color: var(--green); letter-spacing: .1em; text-transform: uppercase; margin-bottom: .4rem; }
     .tl-role { font-size: 1.05rem; font-weight: 700; margin-bottom: .18rem; font-family: var(--font-display); color: var(--text); }
     .tl-company { font-size: .88rem; color: var(--muted); margin-bottom: .75rem; font-weight: 500; }
-    .tl-desc { font-size: .86rem; color: #4B5563; line-height: 1.65; }
+    .tl-desc { font-size: .86rem; color: var(--muted); line-height: 1.65; }
 
     .tl-tags { margin-top: .75rem; display: flex; flex-wrap: wrap; gap: .35rem; }
     .tl-tag {
       font-size: .7rem; font-weight: 600;
       padding: .2rem .7rem; border-radius: 50px;
-      background: #F3F4F6;
-      border: 1px solid #E5E7EB; color: var(--muted);
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border); color: var(--muted);
     }
 
     /* Pulse ring */
@@ -827,7 +824,7 @@
     #projects { background: var(--bg-secondary); }
 
     .proj-card {
-      background: #fff;
+      background: var(--bg-card);
       border: 1.5px solid var(--border);
       border-radius: 22px;
       overflow: hidden; height: 100%;
@@ -843,7 +840,7 @@
     .proj-vis {
       height: 190px; position: relative; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(135deg, #F0FFF8, #F5EEFF);
+      background: linear-gradient(135deg, #0F1419, #12082A);
     }
 
     .nn-svg line { animation: dashFlow 2.5s linear infinite; }
@@ -906,7 +903,7 @@
       color: var(--green); margin-bottom: .45rem;
     }
     .proj-title { font-size: 1.05rem; font-weight: 700; font-family: var(--font-display); margin-bottom: .7rem; color: var(--text); }
-    .proj-desc { font-size: .84rem; color: #6B7280; line-height: 1.65; flex: 1; margin-bottom: 1.1rem; }
+    .proj-desc { font-size: .84rem; color: var(--muted); line-height: 1.65; flex: 1; margin-bottom: 1.1rem; }
 
     .proj-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
     .tech-tags { display: flex; gap: .35rem; flex-wrap: wrap; }
@@ -914,11 +911,11 @@
       font-size: .68rem; font-weight: 700;
       padding: .18rem .6rem; border-radius: 6px;
       background: var(--green-light);
-      color: #007A44;
+      color: var(--green);
     }
     .proj-link {
       width: 34px; height: 34px; border-radius: 50%;
-      background: #F4F6F8;
+      background: rgba(255,255,255,.06);
       border: 1.5px solid var(--border);
       display: flex; align-items: center; justify-content: center;
       color: var(--muted); text-decoration: none; flex-shrink: 0;
@@ -937,7 +934,7 @@
     #contact { background: var(--bg-alt); }
 
     .contact-card {
-      background: #fff;
+      background: var(--bg-card);
       border: 1.5px solid var(--border);
       border-radius: 22px;
       padding: 2.2rem;
@@ -947,7 +944,7 @@
     .contact-link {
       display: flex; align-items: center; gap: .95rem;
       padding: .9rem 1.1rem;
-      background: #F9FAFB;
+      background: rgba(255,255,255,.04);
       border: 1.5px solid var(--border);
       border-radius: 14px;
       margin-bottom: .65rem;
@@ -977,8 +974,8 @@
     }
     .f-input {
       width: 100%;
-      background: #F9FAFB;
-      border: 1.5px solid #E5E7EB;
+      background: rgba(255,255,255,.05);
+      border: 1.5px solid var(--border);
       border-radius: 12px;
       color: var(--text);
       padding: .78rem 1rem;
@@ -993,7 +990,7 @@
       outline: none;
       color: var(--text);
     }
-    .f-input::placeholder { color: #9CA3AF; }
+    .f-input::placeholder { color: rgba(255,255,255,.3); }
 
     /* =============================================
        FOOTER
@@ -1233,16 +1230,22 @@
         <h2 class="section-title">
           Plugging Communities<br>Into the <span class="gradient-text">AI Era</span>
         </h2>
-        <p style="color:rgba(245,245,245,.75);line-height:1.82;margin-bottom:1.4rem;font-size:1.01rem;">
-          I'm Stefan Morris — AI educator, training developer, and founder on a mission to make
-          artificial intelligence accessible to every community, not just the privileged few.
+        <p style="color:var(--text);line-height:1.82;margin-bottom:1.4rem;font-size:1.01rem;">
+          I'm Stefan Morris — AI educator, training developer, and founder of
+          <strong style="color:var(--green);">The Plug AI</strong>, a movement built to make
+          artificial intelligence hands-on, practical, and available to <em>everyone</em>, not just
+          those already in the room. By day I design and deliver impactful training programs at
+          <strong>BigHeart Health</strong>; by mission I run The Plug AI workshops that bridge
+          communities and emerging tech. Currently pursuing a
+          <strong>B.S. in Computer Science</strong> (exp. 2028), I hold certifications in
+          <strong>Python I, II &amp; III</strong> from the D'Aniello Institute at Syracuse University
+          and a <strong>UX/UI</strong> certification from <strong>Merit America</strong>.
         </p>
-        <p style="color:rgba(245,245,245,.62);line-height:1.8;margin-bottom:2rem;font-size:.93rem;">
-          I build training programs at <strong style="color:var(--text);">BigHeart Health</strong>
-          and run <strong style="color:var(--green);">The Plug AI</strong> — delivering AI literacy
-          workshops that make tech tangible. Currently pursuing a
-          <strong style="color:var(--text);">B.S. in Computer Science</strong> at Maestro University
-          (exp. 2028).
+        <p style="color:var(--muted);line-height:1.8;margin-bottom:2rem;font-size:.93rem;">
+          Before moving into tech, I led Patient Access operations as
+          <strong style="color:var(--text);">Team Lead, Admissions Resource Bed Coordinator</strong>
+          at Mount Sinai Hospital in Chicago — where speed and precision directly impacted patient
+          outcomes. That work gave me one conviction: <em>access changes everything.</em>
         </p>
         <div class="d-flex gap-3 flex-wrap align-items-center">
           <a href="#contact" class="btn-plug">Let's Connect</a>
@@ -1417,7 +1420,7 @@
           <div class="cert-ico" style="background:rgba(123,47,190,.18);">🎯</div>
           <div>
             <div class="cert-name">UX/UI Design</div>
-            <div class="cert-issuer">Merit America Achieve · 2025</div>
+            <div class="cert-issuer">Merit America · 2025</div>
           </div>
           <div class="cert-badge-pill">Certified</div>
         </div>
