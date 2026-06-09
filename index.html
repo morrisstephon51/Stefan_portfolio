@@ -4,6 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Stefan Morris — AI Educator, Training Developer, Tech Consultant. Founder of The Plug AI." />
+  <meta name="keywords" content="AI educator, training developer, The Plug AI, Stefan Morris, AI literacy, workforce development, tech education, Chicago" />
+  <meta property="og:type"         content="website" />
+  <meta property="og:title"        content="Stefan Morris | AI Educator | The Plug AI" />
+  <meta property="og:description"  content="AI educator, training developer, and founder of The Plug AI — bridging communities and the AI era." />
+  <meta property="og:url"          content="https://stefan-portfolio-eight.vercel.app" />
+  <meta property="og:image"        content="https://stefan-portfolio-eight.vercel.app/images/stefan.jpg" />
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Stefan Morris | The Plug AI" />
+  <meta name="twitter:description" content="AI educator, training developer, and founder of The Plug AI. Get Connected. Get Skilled. Get into AI." />
   <title>Stefan Morris | AI Educator | The Plug AI</title>
 
   <!-- Google Fonts: Space Grotesk + Syne -->
@@ -1022,9 +1031,47 @@
       section { padding: 72px 0; }
       .hero-img-frame { width: 240px; height: 300px; }
     }
+
+    /* ── Skip-to-content (keyboard accessibility) ── */
+    .skip-link {
+      position: absolute;
+      top: -100px; left: 1rem;
+      background: var(--green); color: #000;
+      font-weight: 700; font-size: .85rem;
+      padding: .5rem 1.2rem;
+      border-radius: 0 0 10px 10px;
+      text-decoration: none;
+      transition: top .2s ease;
+      z-index: 9999;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── Back to top button ── */
+    .back-top {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), #00CC6E);
+      color: #000;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 1050;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .3s ease, transform .3s ease, box-shadow .3s ease;
+      box-shadow: var(--glow-g);
+      text-decoration: none;
+      border: none;
+    }
+    .back-top.show { opacity: 1; transform: translateY(0); }
+    .back-top:hover { transform: translateY(-4px); color: #000; box-shadow: 0 16px 40px rgba(0,255,136,.4); }
   </style>
 </head>
 <body>
+
+<a href="#hero" class="skip-link">Skip to content</a>
 
 <!-- ================================================
      NAVBAR
@@ -1054,6 +1101,9 @@
      HERO
 ================================================ -->
 <section id="hero" aria-label="Introduction">
+
+  <!-- Particle canvas -->
+  <canvas id="heroCanvas" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:.3;"></canvas>
 
   <!-- Ambient orbs -->
   <div class="glow-orb" style="width:520px;height:520px;background:var(--purple);top:-120px;right:-160px;opacity:.07;"></div>
@@ -1973,7 +2023,78 @@
       if (menu?.classList.contains('show')) bootstrap.Collapse.getInstance(menu)?.hide();
     });
   });
+
+  /* ── Back-to-top ── */
+  const backTop = document.getElementById('backTop');
+  if (backTop) {
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('show', window.scrollY > 400);
+    }, { passive: true });
+  }
+
+  /* ── Hero particle canvas ── */
+  (function () {
+    const canvas = document.getElementById('heroCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const COUNT = 55, LINK_DIST = 120;
+    let W, H, pts;
+
+    function resize() {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+
+    function makeParticle() {
+      return {
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - .5) * .45,
+        vy: (Math.random() - .5) * .45,
+        r: Math.random() * 1.5 + .8,
+      };
+    }
+
+    function init() { resize(); pts = Array.from({ length: COUNT }, makeParticle); }
+
+    function frame() {
+      ctx.clearRect(0, 0, W, H);
+      pts.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > W) p.vx *= -1;
+        if (p.y < 0 || p.y > H) p.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = '#00FF88';
+        ctx.fill();
+      });
+      for (let i = 0; i < pts.length - 1; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < LINK_DIST) {
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.strokeStyle = `rgba(0,255,136,${(1 - d / LINK_DIST) * .55})`;
+            ctx.lineWidth = .6;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    window.addEventListener('resize', resize, { passive: true });
+    init();
+    frame();
+  })();
 </script>
+
+<!-- Back-to-top button -->
+<a href="#hero" class="back-top" id="backTop" aria-label="Back to top">
+  <i class="bi bi-chevron-up"></i>
+</a>
 
 </body>
 </html>
