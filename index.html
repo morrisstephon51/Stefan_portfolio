@@ -1060,6 +1060,79 @@
       .hero-img-frame { width: 240px; height: 300px; }
     }
 
+    /* ── Reading progress bar ── */
+    #readProgress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--green), var(--purple), var(--coral));
+      z-index: 9997;
+      border-radius: 0 2px 2px 0;
+      transition: width .08s linear;
+      pointer-events: none;
+    }
+
+    /* ── Custom cursor (desktop pointer devices only) ── */
+    @media (hover: hover) and (pointer: fine) {
+      body, a, button, [role="button"] { cursor: none !important; }
+      input, textarea, select { cursor: text !important; }
+      #cursorDot {
+        position: fixed;
+        width: 7px; height: 7px;
+        background: var(--green);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 99999;
+        transform: translate(-50%, -50%);
+        mix-blend-mode: screen;
+      }
+      #cursorRing {
+        position: fixed;
+        width: 30px; height: 30px;
+        border: 1.5px solid rgba(0,255,136,.45);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 99998;
+        transform: translate(-50%, -50%);
+        transition: left .1s ease, top .1s ease, width .2s ease, height .2s ease, border-color .2s ease;
+      }
+      #cursorRing.over-link {
+        width: 46px; height: 46px;
+        border-color: rgba(123,47,190,.6);
+      }
+    }
+
+    /* ── Ticker ── */
+    .ticker-wrap {
+      overflow: hidden;
+      background: var(--bg-primary);
+      border-top: 1px solid rgba(0,255,136,.1);
+      border-bottom: 1px solid rgba(0,255,136,.1);
+      padding: .65rem 0;
+    }
+    .ticker-track {
+      display: flex;
+      width: max-content;
+      animation: tickerRoll 28s linear infinite;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    .ticker-item {
+      display: flex; align-items: center; gap: .55rem;
+      padding: 0 2.2rem;
+      font-size: .7rem; font-weight: 700;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: var(--muted); white-space: nowrap;
+    }
+    .ti-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--green); opacity: .6; flex-shrink: 0;
+    }
+    @keyframes tickerRoll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
     /* ── Preloader ── */
     #preloader {
       position: fixed; inset: 0;
@@ -1123,6 +1196,13 @@
   </style>
 </head>
 <body>
+
+<!-- Reading progress bar -->
+<div id="readProgress" aria-hidden="true"></div>
+
+<!-- Custom cursor nodes (hidden on touch/non-pointer devices via CSS) -->
+<div id="cursorDot"  aria-hidden="true"></div>
+<div id="cursorRing" aria-hidden="true"></div>
 
 <!-- Preloader -->
 <div id="preloader" role="status" aria-label="Loading">
@@ -1255,6 +1335,31 @@
     <span>scroll</span>
   </div>
 </section>
+
+<!-- Scrolling ticker -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="ti-dot"></span>Get Connected</span>
+    <span class="ticker-item"><span class="ti-dot"></span>Get Skilled</span>
+    <span class="ticker-item"><span class="ti-dot"></span>Get into AI</span>
+    <span class="ticker-item"><span class="ti-dot"></span>The Plug AI</span>
+    <span class="ticker-item"><span class="ti-dot"></span>AI Education</span>
+    <span class="ticker-item"><span class="ti-dot"></span>Workforce Development</span>
+    <span class="ticker-item"><span class="ti-dot"></span>BigHeart Health</span>
+    <span class="ticker-item"><span class="ti-dot"></span>Python · UX/UI</span>
+    <span class="ticker-item"><span class="ti-dot"></span>Chicago, IL</span>
+    <!-- duplicate set for seamless loop -->
+    <span class="ticker-item"><span class="ti-dot"></span>Get Connected</span>
+    <span class="ticker-item"><span class="ti-dot"></span>Get Skilled</span>
+    <span class="ticker-item"><span class="ti-dot"></span>Get into AI</span>
+    <span class="ticker-item"><span class="ti-dot"></span>The Plug AI</span>
+    <span class="ticker-item"><span class="ti-dot"></span>AI Education</span>
+    <span class="ticker-item"><span class="ti-dot"></span>Workforce Development</span>
+    <span class="ticker-item"><span class="ti-dot"></span>BigHeart Health</span>
+    <span class="ticker-item"><span class="ti-dot"></span>Python · UX/UI</span>
+    <span class="ticker-item"><span class="ti-dot"></span>Chicago, IL</span>
+  </div>
+</div>
 
 <div class="section-divider"></div>
 
@@ -2014,6 +2119,41 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+  /* ── Reading progress bar ── */
+  const rp = document.getElementById('readProgress');
+  if (rp) {
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      rp.style.width = Math.min((h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100, 100) + '%';
+    }, { passive: true });
+  }
+
+  /* ── Custom cursor ── */
+  (function () {
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    if (!mq.matches) return;
+    const dot  = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    if (!dot || !ring) return;
+    let rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      dot.style.left = e.clientX + 'px';
+      dot.style.top  = e.clientY + 'px';
+      rx = e.clientX; ry = e.clientY;
+    });
+    function smoothRing() {
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(smoothRing);
+    }
+    smoothRing();
+    const hoverEls = document.querySelectorAll('a, button, .btn-plug, .btn-outline-plug, .proj-link, .stat-card, .skill-card, .tl-card, .cert-row');
+    hoverEls.forEach(el => {
+      el.addEventListener('mouseenter', () => ring.classList.add('over-link'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('over-link'));
+    });
+  })();
+
   /* ── Preloader ── */
   window.addEventListener('load', () => {
     const pl = document.getElementById('preloader');
