@@ -287,6 +287,22 @@
     /* =============================================
        ██  HERO  ██
     ============================================= */
+    /* Persistent cinematic 3D stage */
+    #cinema3d {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: .88;
+    }
+    /* Lift real content above the fixed stage */
+    body > section,
+    body > .ticker-wrap,
+    body > .section-divider,
+    body > footer { position: relative; z-index: 1; }
+
     #hero {
       min-height: 100vh;
       display: flex;
@@ -294,7 +310,7 @@
       position: relative;
       overflow: hidden;
       padding: 0;
-      background: var(--bg-primary);
+      background: transparent;
     }
 
     /* Soft animated grid */
@@ -520,7 +536,7 @@
     /* =============================================
        ██  ABOUT  ██
     ============================================= */
-    #about { background: var(--bg-secondary); }
+    #about { background: rgba(15,20,25,.66); }
 
     .chat-panel {
       background: var(--bg-card);
@@ -650,7 +666,7 @@
     /* =============================================
        ██  SKILLS  ██
     ============================================= */
-    #skills { background: var(--bg-alt); }
+    #skills { background: rgba(18,8,42,.66); }
 
     .skill-card {
       background: var(--bg-card);
@@ -779,7 +795,7 @@
     /* =============================================
        ██  EXPERIENCE  ██
     ============================================= */
-    #experience { background: var(--bg-primary); }
+    #experience { background: rgba(13,13,13,.62); }
 
     .timeline { position: relative; padding-left: 2rem; }
     .timeline::before {
@@ -875,7 +891,7 @@
     /* =============================================
        ██  PROJECTS  ██
     ============================================= */
-    #projects { background: var(--bg-secondary); }
+    #projects { background: rgba(15,20,25,.66); }
 
     .proj-card {
       background: var(--bg-card);
@@ -987,7 +1003,7 @@
     /* =============================================
        ██  CONTACT  ██
     ============================================= */
-    #contact { background: var(--bg-alt); }
+    #contact { background: rgba(18,8,42,.68); }
 
     .contact-card {
       background: var(--bg-card);
@@ -1215,6 +1231,9 @@
   </style>
 </head>
 <body>
+
+<!-- Persistent cinematic 3D stage (fixed, behind all content) -->
+<canvas id="cinema3d" aria-hidden="true"></canvas>
 
 <!-- Reading progress bar -->
 <div id="readProgress" aria-hidden="true"></div>
@@ -2393,92 +2412,151 @@
 
 <!-- three.js hero scene -->
 <script type="importmap">
-  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
 </script>
 <script type="module">
-  const canvas = document.getElementById('heroCanvas');
-  const hero = document.getElementById('hero');
+  /* ============================================================
+     CINEMATIC 3D STAGE
+     A persistent, fixed WebGL scene behind the whole page. A glowing
+     "core" travels, rotates, dollies and morphs shape as you scroll,
+     with neon bloom on desktop. Falls back to the 2D hero particles
+     for reduced-motion / no-WebGL / CDN failure.
+  ============================================================ */
+  const cinema = document.getElementById('cinema3d');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+  function fallback2D(staticOnly) {
+    window.__hero3dBooted = true;
+    if (cinema) cinema.style.display = 'none';
+    if (window.__initHeroParticles2D) window.__initHeroParticles2D(staticOnly);
+  }
 
   boot();
 
   async function boot() {
-    if (!canvas || !hero) return;
-
-    if (reduce.matches) {
-      window.__hero3dBooted = true;
-      window.__initHeroParticles2D(true);
-      return;
-    }
+    if (!cinema) { fallback2D(true); return; }
+    if (reduce.matches) { fallback2D(true); return; }
 
     let webgl2 = false;
     try { webgl2 = !!document.createElement('canvas').getContext('webgl2'); } catch (e) {}
-    if (!webgl2) {
-      window.__hero3dBooted = true;
-      window.__initHeroParticles2D(false);
-      return;
-    }
+    if (!webgl2) { fallback2D(false); return; }
 
-    let THREE;
-    try { THREE = await import('three'); } catch (e) {
-      window.__initHeroParticles2D(false);
-      return;
-    }
+    let THREE, EffectComposer, RenderPass, UnrealBloomPass, OutputPass;
+    try {
+      THREE = await import('three');
+      [{ EffectComposer }, { RenderPass }, { UnrealBloomPass }, { OutputPass }] = await Promise.all([
+        import('three/addons/postprocessing/EffectComposer.js'),
+        import('three/addons/postprocessing/RenderPass.js'),
+        import('three/addons/postprocessing/UnrealBloomPass.js'),
+        import('three/addons/postprocessing/OutputPass.js')
+      ]);
+    } catch (e) { fallback2D(false); return; }
 
     window.__hero3dBooted = true;
-    canvas.dataset.mode = '3d';
+    const heroCanvas = document.getElementById('heroCanvas');
+    if (heroCanvas) heroCanvas.style.display = 'none';
 
     const isMobile = matchMedia('(max-width: 768px)').matches;
+    const hoverable = matchMedia('(hover: hover)').matches;
+
     const renderer = new THREE.WebGLRenderer({
-      canvas, alpha: true,
+      canvas: cinema, alpha: true,
       antialias: window.devicePixelRatio < 2,
-      powerPreference: 'low-power'
+      powerPreference: 'high-performance'
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(55, 1, .1, 100);
-    camera.position.z = 8;
+    camera.position.set(0, 0, 8);
 
     const group = new THREE.Group();
     scene.add(group);
 
+    /* Wireframe icosahedrons — brighter so bloom catches them */
     const outer = new THREE.Mesh(
       new THREE.IcosahedronGeometry(3.2, 1),
-      new THREE.MeshBasicMaterial({ wireframe: true, color: 0x00ff88, transparent: true, opacity: .22 })
+      new THREE.MeshBasicMaterial({ wireframe: true, color: 0x00ff88, transparent: true, opacity: .5 })
     );
     const inner = new THREE.Mesh(
       new THREE.IcosahedronGeometry(1.9, 0),
-      new THREE.MeshBasicMaterial({ wireframe: true, color: 0x7b2fbe, transparent: true, opacity: .3 })
+      new THREE.MeshBasicMaterial({ wireframe: true, color: 0x7b2fbe, transparent: true, opacity: .55 })
     );
     group.add(outer, inner);
 
-    const N = isMobile ? 180 : 450;
-    const pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
-    const palette = [[0, 1, .53], [.48, .18, .75], [1, 1, 1]];
+    /* Morphing point cloud — 5 target shapes lerped by a scroll-driven value */
+    const N = isMobile ? 220 : 700;
+    const targets = buildTargets(N);
+    const cur = Float32Array.from(targets[0]);
+    const col = new Float32Array(N * 3);
+    const palette = [[0, 1, .53], [.48, .18, .75], [0, .81, 1], [1, 1, 1]];
     for (let i = 0; i < N; i++) {
-      const r = 2.5 + Math.random() * 2.5;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      pos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = r * Math.cos(phi);
-      const c = palette[Math.random() < .7 ? 0 : (Math.random() < .67 ? 1 : 2)];
+      const r = Math.random();
+      const c = palette[r < .55 ? 0 : r < .78 ? 1 : r < .93 ? 2 : 3];
       col[i * 3] = c[0]; col[i * 3 + 1] = c[1]; col[i * 3 + 2] = c[2];
     }
     const pgeo = new THREE.BufferGeometry();
-    pgeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    pgeo.setAttribute('position', new THREE.BufferAttribute(cur, 3));
     pgeo.setAttribute('color', new THREE.BufferAttribute(col, 3));
     const points = new THREE.Points(pgeo, new THREE.PointsMaterial({
-      size: .045, vertexColors: true, transparent: true, opacity: .85,
+      size: isMobile ? .06 : .05, vertexColors: true, transparent: true, opacity: .95,
       blending: THREE.AdditiveBlending, depthWrite: false
     }));
     group.add(points);
 
+    function buildTargets(n) {
+      const sphere = new Float32Array(n * 3), knot = new Float32Array(n * 3),
+            helix = new Float32Array(n * 3), grid = new Float32Array(n * 3);
+      const cols = Math.ceil(Math.sqrt(n));
+      for (let i = 0; i < n; i++) {
+        const r = 2.6 + Math.random() * 1.8;
+        const th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1);
+        sphere[i * 3]     = r * Math.sin(ph) * Math.cos(th);
+        sphere[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th);
+        sphere[i * 3 + 2] = r * Math.cos(ph);
+        const u = (i / n) * Math.PI * 2, s = 1.35;
+        knot[i * 3]     = (2 + Math.cos(3 * u)) * Math.cos(2 * u) * s;
+        knot[i * 3 + 1] = (2 + Math.cos(3 * u)) * Math.sin(2 * u) * s;
+        knot[i * 3 + 2] = Math.sin(3 * u) * s * 1.7;
+        const a = i / n, ang = a * Math.PI * 2 * 5, sign = i % 2 ? 1 : -1;
+        helix[i * 3]     = Math.cos(ang) * 1.7 * sign;
+        helix[i * 3 + 1] = (a - .5) * 7.5;
+        helix[i * 3 + 2] = Math.sin(ang) * 1.7 * sign;
+        const gx = (i % cols) / (cols - 1) - .5, gy = Math.floor(i / cols) / (cols - 1) - .5;
+        grid[i * 3]     = gx * 9;
+        grid[i * 3 + 1] = gy * 9;
+        grid[i * 3 + 2] = (Math.random() - .5) * .6;
+      }
+      return [sphere, knot, helix, grid, Float32Array.from(sphere)];
+    }
+
+    const morphState = { v: 0 };
+    function applyMorph(m) {
+      const seg = Math.max(0, Math.min(Math.floor(m), targets.length - 2));
+      const f = m - seg;
+      const a = targets[seg], b = targets[seg + 1], arr = pgeo.attributes.position.array;
+      for (let i = 0; i < N * 3; i++) arr[i] = a[i] + (b[i] - a[i]) * f;
+      pgeo.attributes.position.needsUpdate = true;
+    }
+
+    /* Bloom composer (desktop only — biggest GPU cost) */
+    let composer = null;
+    if (!isMobile) {
+      composer = new EffectComposer(renderer);
+      composer.addPass(new RenderPass(scene, camera));
+      composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 1.1, .5, 0));
+      composer.addPass(new OutputPass());
+    }
+
     function resize() {
-      const w = canvas.offsetWidth || hero.offsetWidth;
-      const h = canvas.offsetHeight || hero.offsetHeight;
+      const w = innerWidth, h = innerHeight;
       renderer.setSize(w, h, false);
+      if (composer) composer.setSize(w, h);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
     }
@@ -2486,60 +2564,79 @@
     let rT;
     window.addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(resize, 150); }, { passive: true });
 
-    const hoverable = matchMedia('(hover: hover)').matches;
-    let mx = 0, my = 0;
+    let px = 0, py = 0;
     if (hoverable) {
       window.addEventListener('pointermove', e => {
-        mx = (e.clientX / innerWidth) * 2 - 1;
-        my = (e.clientY / innerHeight) * 2 - 1;
+        px = (e.clientX / innerWidth) * 2 - 1;
+        py = (e.clientY / innerHeight) * 2 - 1;
       }, { passive: true });
     }
+
+    /* Scroll-driven camera + object targets (set by the GSAP timeline below) */
+    const cam = { x: 0, y: 0, z: 8, lx: 0, ly: 0 };
+    const gpos = { x: 0, y: 0 };
 
     const clock = new THREE.Clock();
     function tick() {
       const t = clock.getElapsedTime();
-      outer.rotation.y += .0012; outer.rotation.x += .0004;
-      inner.rotation.y -= .002;  inner.rotation.x -= .0006;
-      points.rotation.y += .0005;
-      if (hoverable) {
-        camera.position.x += (mx * .9 - camera.position.x) * .05;
-        camera.position.y += (-my * .5 - camera.position.y) * .05;
-      } else {
-        camera.position.x = Math.sin(t * .25) * .5;
-        camera.position.y = Math.cos(t * .18) * .3;
-      }
-      camera.lookAt(0, 0, 0);
-      renderer.render(scene, camera);
+      outer.rotation.y += .0016; outer.rotation.x += .0006;
+      inner.rotation.y -= .0022; inner.rotation.x -= .0008;
+      points.rotation.y += .0006;
+      group.position.x += (gpos.x - group.position.x) * .06;
+      group.position.y += (gpos.y - group.position.y) * .06;
+      const ox = hoverable ? px * .6 : Math.sin(t * .2) * .4;
+      const oy = hoverable ? -py * .4 : Math.cos(t * .16) * .3;
+      camera.position.set(cam.x + ox, cam.y + oy, cam.z);
+      camera.lookAt(cam.lx, cam.ly, 0);
+      if (composer) composer.render(); else renderer.render(scene, camera);
     }
 
-    let running = false, heroVisible = true;
+    let running = false;
     function setLoop() {
-      const want = heroVisible && !document.hidden && !reduce.matches;
+      const want = !document.hidden && !reduce.matches;
       if (want && !running) { renderer.setAnimationLoop(tick); running = true; }
       if (!want && running) { renderer.setAnimationLoop(null); running = false; }
     }
     setLoop();
     document.addEventListener('visibilitychange', setLoop);
-    new IntersectionObserver(entries => {
-      heroVisible = entries[0].isIntersecting;
-      setLoop();
-    }).observe(hero);
     if (reduce.addEventListener) reduce.addEventListener('change', setLoop);
 
-    canvas.addEventListener('webglcontextlost', e => {
-      e.preventDefault();
-      renderer.setAnimationLoop(null);
-      running = false;
+    cinema.addEventListener('webglcontextlost', e => {
+      e.preventDefault(); renderer.setAnimationLoop(null); running = false;
     });
-    canvas.addEventListener('webglcontextrestored', () => setLoop());
+    cinema.addEventListener('webglcontextrestored', () => setLoop());
 
-    /* Scroll-linked scrub: network rotates and recedes as the hero scrolls out */
+    /* ── Master scroll choreography: the core flies through the page ── */
     if (window.gsap && window.ScrollTrigger) {
-      const st = { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: .6 };
-      gsap.to(group.rotation, { y: Math.PI * 1.5, x: .4, ease: 'none', scrollTrigger: st });
-      gsap.to(camera.position, { z: 11, ease: 'none', scrollTrigger: { ...st } });
-      gsap.to(canvas, { opacity: 0, ease: 'none',
-        scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+      gsap.registerPlugin(ScrollTrigger);
+      ScrollTrigger.config({ ignoreMobileResize: true });
+
+      /* camera/object state per section (hero→about→skills→exp→projects→contact).
+         Kept modest so the glowing core stays framed on-screen the whole way down —
+         the drama comes from morph + rotation + a gentle dolly, not flying it away. */
+      const beats = [
+        { cam: { x: 0,    y: 0,   z: 8,   lx: 0,   ly: 0   }, g: { x: 0,   y: 0   }, morph: 0   },
+        { cam: { x: 1.2,  y: -.2, z: 8.5, lx: -.3, ly: 0   }, g: { x: -.6, y: .2  }, morph: 1   },
+        { cam: { x: -1.2, y: .3,  z: 9,   lx: .3,  ly: .1  }, g: { x: .5,  y: -.2 }, morph: 2   },
+        { cam: { x: .8,   y: -.3, z: 8.5, lx: -.1, ly: -.2 }, g: { x: -.4, y: .2  }, morph: 2.5 },
+        { cam: { x: -.6,  y: .2,  z: 9.5, lx: 0,   ly: 0   }, g: { x: .2,  y: 0   }, morph: 3   },
+        { cam: { x: 0,    y: 0,   z: 6.5, lx: 0,   ly: 0   }, g: { x: 0,   y: 0   }, morph: 4   }
+      ];
+
+      Object.assign(cam, beats[0].cam);
+      const tl = gsap.timeline({
+        defaults: { ease: 'none', duration: 1 },
+        scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: .6 },
+        onUpdate: () => applyMorph(morphState.v)
+      });
+      for (let i = 1; i < beats.length; i++) {
+        const b = beats[i], at = i - 1;
+        tl.to(cam, b.cam, at)
+          .to(gpos, b.g, at)
+          .to(morphState, { v: b.morph }, at);
+      }
+
+      window.addEventListener('load', () => ScrollTrigger.refresh());
     }
   }
 </script>
